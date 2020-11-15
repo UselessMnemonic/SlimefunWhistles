@@ -1,0 +1,10 @@
+name: DogWhistle
+version: 1.0
+author: UselessMnemonic
+description: Introduces magic whistles into the game.
+website: https://github.com/UselessMnemonic
+
+main: me.uselessmnemonic.whistles.Whistles
+depend: [Slimefun]
+
+api-version: 1.16
