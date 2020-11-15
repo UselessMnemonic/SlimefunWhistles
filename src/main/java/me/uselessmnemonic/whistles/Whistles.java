@@ -2,6 +2,7 @@ package me.uselessmnemonic.whistles;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import me.uselessmnemonic.whistles.pets.SitWhistle;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Whistles extends JavaPlugin implements SlimefunAddon {
@@ -14,6 +15,10 @@ public class Whistles extends JavaPlugin implements SlimefunAddon {
 
     public Whistles() {
         instance = this;
+    }
+
+    public static NamespacedKey getNamespacedKey(String key) {
+        return new NamespacedKey(instance, key);
     }
 
     @Override

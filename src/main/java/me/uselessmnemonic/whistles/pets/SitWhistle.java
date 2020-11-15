@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class SitWhistle extends AbstractWhistle {
 
@@ -29,7 +30,7 @@ public class SitWhistle extends AbstractWhistle {
 
     public SitWhistle() {
         super(
-            new SlimefunItemStack("SIT_WHISTLE", Material.BAMBOO, ChatColor.WHITE + "Sit Whistle", ChatColor.YELLOW + "Makes the player's pets sit down."),
+            new SlimefunItemStack("SIT_WHISTLE", Material.BAMBOO, ChatColor.WHITE + "Sit Whistle", ChatColor.YELLOW + "Makes the player's pets sit and stand."),
             new ItemStack[] {
                 new ItemStack(Material.BAMBOO),         null, null,
                 new ItemStack(Material.IRON_NUGGET),    null, null,
@@ -39,15 +40,28 @@ public class SitWhistle extends AbstractWhistle {
     }
 
     @Override
+    public Melody getMelody() {
+        return MELODY;
+    }
+
+    @Override
     public void onWhistleBlow(PlayerRightClickEvent event) {
         Player player = event.getPlayer();
-        MelodyRunnable melodyRunnable = new MelodyRunnable(MELODY);
-        melodyRunnable.play(player);
+
+        // find all pets in the immediate area
         List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-        nearbyEntities.stream()
+        Stream<? extends Sittable> pets = nearbyEntities.stream()
                 .filter((e) -> e instanceof Tameable && e instanceof Sittable)
                 .map((e) -> (Sittable & Tameable)e)
-                .filter((e) -> e.isTamed() && Objects.equals(e.getOwner(), player))
-                .forEach((e) -> e.setSitting(true));
+                .filter((e) -> e.isTamed() && Objects.equals(e.getOwner(), player));
+
+        // count how many pets are sitting
+        long numSitting = pets.filter(Sittable::isSitting).count();
+
+        // if at least half are sitting, then stand them
+        if (numSitting >= pets.count() / 2) pets.forEach((p) -> p.setSitting(false));
+
+        // otherwise, sit them
+        else pets.forEach((p) -> p.setSitting(true));
     }
 }
