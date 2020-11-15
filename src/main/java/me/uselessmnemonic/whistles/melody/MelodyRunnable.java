@@ -32,6 +32,7 @@ public class MelodyRunnable extends BukkitRunnable {
             World world = player.getWorld();
             Note note = melody.getNote(index);
             if (note != null) world.playSound(location, melody.getSound(), 1.0f, note.pitch);
+            index++;
         }
         else this.cancel();
     }

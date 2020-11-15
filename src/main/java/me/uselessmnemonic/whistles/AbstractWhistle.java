@@ -15,16 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class AbstractWhistle extends SlimefunItem implements DamageableItem {
 
-    private static final Category WHISTLE_CATEGORY;
-
-    static {
+    public static Category getWhistleCategory() {
         NamespacedKey customId = new NamespacedKey(Whistles.getInstance(), "category_whistles");
         CustomItem customItem = new CustomItem(Material.BAMBOO, ChatColor.WHITE + "Magic Whistles");
-        WHISTLE_CATEGORY = new Category(customId, customItem);
+        return new Category(customId, customItem);
     }
 
     public AbstractWhistle(SlimefunItemStack item, ItemStack[] recipe) {
-        super(WHISTLE_CATEGORY, item, RecipeType.MAGIC_WORKBENCH, recipe);
+        super(AbstractWhistle.getWhistleCategory(), item, RecipeType.MAGIC_WORKBENCH, recipe);
     }
 
     @Override

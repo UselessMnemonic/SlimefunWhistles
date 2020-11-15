@@ -29,7 +29,7 @@ public class SitWhistle extends AbstractWhistle {
 
     public SitWhistle() {
         super(
-            new SlimefunItemStack("SIT_WHISTLE", Material.BAMBOO, ChatColor.YELLOW + "Makes the player's pets sit down."),
+            new SlimefunItemStack("SIT_WHISTLE", Material.BAMBOO, ChatColor.WHITE + "Sit Whistle", ChatColor.YELLOW + "Makes the player's pets sit down."),
             new ItemStack[] {
                 new ItemStack(Material.BAMBOO),         null, null,
                 new ItemStack(Material.IRON_NUGGET),    null, null,

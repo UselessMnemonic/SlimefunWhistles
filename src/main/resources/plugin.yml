@@ -1,4 +1,4 @@
-name: DogWhistle
+name: Whistless
 version: 1.0
 author: UselessMnemonic
 description: Introduces magic whistles into the game.
@@ -6,5 +6,6 @@ website: https://github.com/UselessMnemonic
 
 main: me.uselessmnemonic.whistles.Whistles
 depend: [Slimefun]
+load: POSTWORLD
 
 api-version: 1.16
