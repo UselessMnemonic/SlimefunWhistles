@@ -53,7 +53,7 @@ public class SitWhistle extends AbstractWhistle {
         Player player = event.getPlayer();
 
         // find all pets in the immediate area
-        List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+        List<Entity> nearbyEntities = player.getNearbyEntities(10, 10, 10);
         List<Sittable> pets = nearbyEntities.stream()
                 .filter((e) -> e instanceof Tameable && e instanceof Sittable)
                 .map((e) -> (Sittable & Tameable)e)

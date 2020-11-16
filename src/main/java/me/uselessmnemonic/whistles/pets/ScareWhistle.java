@@ -25,10 +25,6 @@ public class ScareWhistle extends AbstractWhistle {
         Note.D0,
         Note.E0,
         Note.G0,
-        Note.C1,
-        null,
-        Note.C1,
-        null,
         Note.C1
     );
 
@@ -58,7 +54,7 @@ public class ScareWhistle extends AbstractWhistle {
         Player player = event.getPlayer();
 
         // find all hostile animals in the immediate area
-        List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+        List<Entity> nearbyEntities = player.getNearbyEntities(10, 10, 10);
         List<Animals> animals = nearbyEntities.stream()
                 .filter((e) -> e instanceof PolarBear | e instanceof Wolf | e instanceof Hoglin)
                 .map((e) -> (Animals)e)
@@ -74,6 +70,7 @@ public class ScareWhistle extends AbstractWhistle {
         // scare away animals
         animals.forEach((e) -> {
             e.setTarget(null);
+            e.getPathfinder().stopPathfinding();
             if (e instanceof Wolf) ((Wolf) e).setAngry(false);
             Vector randomDistance = Vector.getRandom().setY(0).normalize().multiply(20);
             Location dest = player.getLocation().add(randomDistance);
