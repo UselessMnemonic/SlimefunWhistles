@@ -21,10 +21,18 @@ import org.bukkit.persistence.PersistentDataType;
 import javax.annotation.Nonnull;
 import java.util.UUID;
 
+/**
+ * The root class of all Whistles
+ */
 public abstract class AbstractWhistle extends SlimefunItem implements DamageableItem {
 
     private static Category categoryInstance;
 
+    /**
+     * Returns a singleton instance of the Category in which all Whistles belong
+     * @return The custom Whistle Category
+     */
+    @Nonnull
     public static Category getWhistleCategory() {
         if (categoryInstance == null) {
             NamespacedKey customId = new NamespacedKey(Whistles.getInstance(), "category_whistles");
@@ -34,6 +42,11 @@ public abstract class AbstractWhistle extends SlimefunItem implements Damageable
         return categoryInstance;
     }
 
+    /**
+     * The Constructor for the AbstractWhistle
+     * @param item The SlimefunItemStack that defines the appearance of the item
+     * @param recipe The recipe for crafting the item
+     */
     public AbstractWhistle(SlimefunItemStack item, ItemStack[] recipe) {
         super(AbstractWhistle.getWhistleCategory(), item, RecipeType.MAGIC_WORKBENCH, recipe);
     }
@@ -44,6 +57,11 @@ public abstract class AbstractWhistle extends SlimefunItem implements Damageable
         addItemHandler(itemUseHandler);
     }
 
+    /**
+     * Retrieves an ItemStack for use as a template, modified by adding a UUID
+     * to distinguish one Whistle from the next
+     * @return The ItemStack template
+     */
     @Nonnull
     @Override
     public ItemStack getItem() {
@@ -63,6 +81,10 @@ public abstract class AbstractWhistle extends SlimefunItem implements Damageable
          return false;
     }
 
+    /**
+     * Called when a Whistle is used, to play a melody and to call
+     * the Whistle-specific handler
+     */
     public void preWhistleBlow(PlayerRightClickEvent event) {
         event.cancel();
         MelodyRunnable melodyRunnable = new MelodyRunnable(getMelody(event.getItem()));
@@ -70,7 +92,15 @@ public abstract class AbstractWhistle extends SlimefunItem implements Damageable
         onWhistleBlow(event);
     }
 
+    /**
+     * Retrieves the Melody to be played when the given Whistle is used.
+     * @param stack The particular Whistle used by a Player
+     * @return A Melody to be played when the Whistle is used
+     */
     public abstract Melody getMelody(ItemStack stack);
 
+    /**
+     * A Whistle-specific use handler.
+     */
     public abstract void onWhistleBlow(PlayerRightClickEvent event);
 }

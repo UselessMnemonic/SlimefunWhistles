@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 
 public class ScareWhistle extends AbstractWhistle {
 
+    // Battle Sound 25 - Mother 3
     private static final Melody MELODY = new Melody(
         Instrument.XYLOPHONE, 2,
-            Note.C1,
-            Note.DSh1,
-            Note.FSh1,
-            Note.ASh1,
-            Note.FSh1
+            Note.CSh1,
+            Note.E1,
+            Note.GSh1,
+            Note.B1,
+            Note.GSh1
     );
 
     public ScareWhistle() {
@@ -35,7 +36,8 @@ public class ScareWhistle extends AbstractWhistle {
                 "SCARE_WHISTLE",
                 Material.BAMBOO,
                 ChatColor.WHITE + "Scare Whistle",
-                ChatColor.YELLOW + "Scares away wild Bears, Wolves, and Hoglins."
+                ChatColor.YELLOW + "Scares away wild Bears,",
+                ChatColor.YELLOW + "Wolves, and Hoglins."
             ),
             new ItemStack[] {
                     new ItemStack(Material.BAMBOO), new ItemStack(Material.IRON_NUGGET), new ItemStack(Material.SPIDER_EYE),

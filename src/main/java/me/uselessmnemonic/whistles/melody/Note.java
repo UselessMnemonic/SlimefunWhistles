@@ -1,5 +1,11 @@
 package me.uselessmnemonic.whistles.melody;
 
+/**
+ * A listing of standard Notes to be used in a Melody
+ * The 0th Octave is the upper part of an octave--G, A, B
+ * The 1st Octave is full--C D E F G A B
+ * The 2nd Octave is the lower part of an octave--C, D, E, F
+ */
 public class Note {
 
     public static final Note FSh0 = new Note(0.5f);
@@ -35,6 +41,11 @@ public class Note {
         this.pitch = pitch;
     }
 
+    /**
+     * Retrieves the Note corresponding to a number of right-clicks on a note block, or uses.
+     * @param uses The number of right-clicks
+     * @return A Note tuned to the specific frequency
+     */
     public static Note noteBlockUses(int uses) {
         return new Note((float) Math.pow(2.0, ((uses % 25) - 12) / 12.0));
     }

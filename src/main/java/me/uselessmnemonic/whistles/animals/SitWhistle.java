@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 public class SitWhistle extends AbstractWhistle {
 
+    // Battle Sound 13 - Mother 3
     private static final Melody MELODY = new Melody(
         Instrument.BASS_GUITAR, 2,
         Note.ASh1,

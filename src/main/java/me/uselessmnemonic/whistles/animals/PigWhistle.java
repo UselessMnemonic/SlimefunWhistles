@@ -1,7 +1,5 @@
 package me.uselessmnemonic.whistles.animals;
 
-import com.destroystokyo.paper.entity.ai.MobGoals;
-import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.uselessmnemonic.whistles.AbstractWhistle;
@@ -10,13 +8,13 @@ import me.uselessmnemonic.whistles.melody.Note;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PigWhistle extends AbstractWhistle {
 
+    // His Highness's Theme - Mother 3
     private static final Melody MELODY = new Melody(
         Instrument.FLUTE, 2,
         Note.GSh0,

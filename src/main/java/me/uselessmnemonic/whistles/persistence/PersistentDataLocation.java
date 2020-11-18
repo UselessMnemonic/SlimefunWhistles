@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
+import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
@@ -14,17 +15,20 @@ public class PersistentDataLocation implements PersistentDataType<byte[], Locati
     public static final PersistentDataLocation instance = new PersistentDataLocation();
 
     @Override
+    @Nonnull
     public Class<byte[]> getPrimitiveType() {
         return byte[].class;
     }
 
     @Override
+    @Nonnull
     public Class<Location> getComplexType() {
         return Location.class;
     }
 
     @Override
-    public byte[] toPrimitive(Location complex, PersistentDataAdapterContext context) {
+    @Nonnull
+    public byte[] toPrimitive(@Nonnull Location complex, @Nonnull PersistentDataAdapterContext context) {
         ByteBuffer bb = ByteBuffer.wrap(new byte[48]);
         UUID worldUUID = complex.getWorld().getUID();
         bb.putLong(worldUUID.getMostSignificantBits());
@@ -38,7 +42,8 @@ public class PersistentDataLocation implements PersistentDataType<byte[], Locati
     }
 
     @Override
-    public Location fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
+    @Nonnull
+    public Location fromPrimitive(@Nonnull byte[] primitive, @Nonnull PersistentDataAdapterContext context) {
         ByteBuffer bb = ByteBuffer.wrap(primitive);
         World world = Bukkit.getWorld(new UUID(bb.getLong(), bb.getLong()));
         double x = bb.getDouble(), y = bb.getDouble(), z = bb.getDouble();
