@@ -2,7 +2,6 @@ package me.uselessmnemonic.whistles.persistence;
 
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 public class PersistentDataBoolean implements PersistentDataType<Byte, Boolean> {
 
@@ -19,7 +18,6 @@ public class PersistentDataBoolean implements PersistentDataType<Byte, Boolean> 
     }
 
     @Override
-    @NotNull
     public Byte toPrimitive(Boolean complex, PersistentDataAdapterContext persistentDataAdapterContext) {
         return complex ? (byte)1 : 0;
     }
