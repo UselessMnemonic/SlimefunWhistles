@@ -1,18 +1,19 @@
-package me.uselessmnemonic.whistles.pets;
+package me.uselessmnemonic.whistles.animals;
 
+import com.destroystokyo.paper.entity.ai.MobGoals;
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.uselessmnemonic.whistles.AbstractWhistle;
+import me.uselessmnemonic.whistles.Whistles;
 import me.uselessmnemonic.whistles.melody.Melody;
 import me.uselessmnemonic.whistles.melody.Note;
-import org.bukkit.ChatColor;
-import org.bukkit.Instrument;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sittable;
-import org.bukkit.entity.Tameable;
+import me.uselessmnemonic.whistles.persistence.PersistentDataBoolean;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +22,19 @@ import java.util.stream.Collectors;
 public class SitWhistle extends AbstractWhistle {
 
     private static final Melody MELODY = new Melody(
-        Instrument.FLUTE, 2,
-        Note.D0,
-        Note.B0,
-        Note.G0
+        Instrument.BASS_GUITAR, 2,
+        Note.ASh1,
+        Note.C2,
+        Note.G1,
+        null,
+        Note.ASh1,
+        null,
+        Note.C2,
+        null,
+        Note.DSh2,
+        null,
+        null,
+        Note.G1
     );
 
     public SitWhistle() {
@@ -44,7 +54,7 @@ public class SitWhistle extends AbstractWhistle {
     }
 
     @Override
-    public Melody getMelody() {
+    public Melody getMelody(ItemStack stack) {
         return MELODY;
     }
 
@@ -53,11 +63,11 @@ public class SitWhistle extends AbstractWhistle {
         Player player = event.getPlayer();
 
         // find all pets in the immediate area
-        List<Entity> nearbyEntities = player.getNearbyEntities(10, 10, 10);
+        List<Entity> nearbyEntities = player.getNearbyEntities(15, 15, 15);
         List<Sittable> pets = nearbyEntities.stream()
                 .filter((e) -> e instanceof Tameable && e instanceof Sittable)
                 .map((e) -> (Sittable & Tameable)e)
-                .filter((e) -> e.isTamed() && Objects.equals(e.getOwner(), player))
+                .filter((e) -> e.isTamed() && Objects.equals(e.getOwnerUniqueId(), player.getUniqueId()))
                 .collect(Collectors.toList());
 
         // count how many pets are sitting
@@ -68,10 +78,20 @@ public class SitWhistle extends AbstractWhistle {
         if (numSitting == numPets) pets.forEach((e) -> e.setSitting(false));
 
         // if all pets are standing, sit them all
-        else if (numSitting == 0) pets.forEach((e) -> e.setSitting(true));
+        else if (numSitting == 0) pets.forEach((e) -> {
+            e.setSitting(true);
+            ((Mob)e).setTarget(null);
+            PersistentDataContainer container = ((Mob)e).getPersistentDataContainer();
+            container.set(Whistles.getNamespacedKey("STOP_AGGRO"), PersistentDataBoolean.instance, true);
+        });
 
         // if most pets are sitting, sit the rest
-        else if (numSitting > numPets / 2) pets.forEach((e) -> e.setSitting(true));
+        else if (numSitting > numPets / 2) pets.forEach((e) -> {
+            e.setSitting(true);
+            ((Mob)e).setTarget(null);
+            PersistentDataContainer container = ((Mob)e).getPersistentDataContainer();
+            container.set(Whistles.getNamespacedKey("STOP_AGGRO"), PersistentDataBoolean.instance, true);
+        });
 
         // if most pets are standing, stand the rest
         else pets.forEach((e) -> e.setSitting(false));

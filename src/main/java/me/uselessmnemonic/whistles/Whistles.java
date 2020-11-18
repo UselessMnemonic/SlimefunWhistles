@@ -1,8 +1,11 @@
 package me.uselessmnemonic.whistles;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import me.uselessmnemonic.whistles.pets.ScareWhistle;
-import me.uselessmnemonic.whistles.pets.SitWhistle;
+import me.uselessmnemonic.whistles.animals.PigWhistle;
+import me.uselessmnemonic.whistles.animals.ScareWhistle;
+import me.uselessmnemonic.whistles.animals.SitWhistle;
+import me.uselessmnemonic.whistles.events.EntityAggressionInterceptListener;
+import me.uselessmnemonic.whistles.events.EntityFleeInterceptListener;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +34,12 @@ public class Whistles extends JavaPlugin implements SlimefunAddon {
 
         ScareWhistle scareWhistle = new ScareWhistle();
         scareWhistle.register(this);
+
+        PigWhistle pigWhistle = new PigWhistle();
+        pigWhistle.register(this);
+
+        this.getServer().getPluginManager().registerEvents(new EntityFleeInterceptListener(), this);
+        this.getServer().getPluginManager().registerEvents(new EntityAggressionInterceptListener(), this);
     }
 
     @Nonnull

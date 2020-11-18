@@ -1,31 +1,32 @@
-package me.uselessmnemonic.whistles.pets;
+package me.uselessmnemonic.whistles.animals;
 
+import com.destroystokyo.paper.entity.ai.*;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.uselessmnemonic.whistles.AbstractWhistle;
+import me.uselessmnemonic.whistles.Whistles;
 import me.uselessmnemonic.whistles.melody.Melody;
 import me.uselessmnemonic.whistles.melody.Note;
-import org.bukkit.ChatColor;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import me.uselessmnemonic.whistles.persistence.PersistentDataBoolean;
+import me.uselessmnemonic.whistles.persistence.PersistentDataLocation;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ScareWhistle extends AbstractWhistle {
 
     private static final Melody MELODY = new Melody(
-        Instrument.FLUTE, 3,
-        Note.C0,
-        Note.D0,
-        Note.E0,
-        Note.G0,
-        Note.C1
+        Instrument.XYLOPHONE, 2,
+            Note.C1,
+            Note.DSh1,
+            Note.FSh1,
+            Note.ASh1,
+            Note.FSh1
     );
 
     public ScareWhistle() {
@@ -45,7 +46,7 @@ public class ScareWhistle extends AbstractWhistle {
     }
 
     @Override
-    public Melody getMelody() {
+    public Melody getMelody(ItemStack stack) {
         return MELODY;
     }
 
@@ -56,25 +57,32 @@ public class ScareWhistle extends AbstractWhistle {
         // find all hostile animals in the immediate area
         List<Entity> nearbyEntities = player.getNearbyEntities(10, 10, 10);
         List<Animals> animals = nearbyEntities.stream()
-                .filter((e) -> e instanceof PolarBear | e instanceof Wolf | e instanceof Hoglin)
-                .map((e) -> (Animals)e)
-                .filter((e) -> {
-                    if (e instanceof Tameable) {
-                        Tameable t = (Tameable)e;
-                        return !Objects.equals(t.getOwnerUniqueId(), player.getUniqueId());
-                    }
-                    else return false;
-                })
-                .collect(Collectors.toList());
+            .filter((e) -> e instanceof PolarBear | e instanceof Wolf | e instanceof Hoglin)
+            .filter((e) -> !(e instanceof Tameable) || !Objects.equals(((Tameable)e).getOwnerUniqueId(), player.getUniqueId()) )
+            .map((e) -> (Animals)e)
+            .collect(Collectors.toList());
 
         // scare away animals
         animals.forEach((e) -> {
+
+            // erase target
+            if (e instanceof Wolf) {
+                ((Wolf) e).setAngry(false);
+            }
+
+            // find distant location
+            Vector offset = e.getLocation().toVector()
+                .setY(0)
+                .subtract(player.getLocation().toVector().setY(0))
+                .normalize()
+                .multiply(15);
+            Location dest = player.getLocation().add(offset);
+
+            // flee
+            PersistentDataContainer container = e.getPersistentDataContainer();
+            container.set(Whistles.getNamespacedKey("FLEE"), PersistentDataLocation.instance, dest);
             e.setTarget(null);
-            e.getPathfinder().stopPathfinding();
-            if (e instanceof Wolf) ((Wolf) e).setAngry(false);
-            Vector randomDistance = Vector.getRandom().setY(0).normalize().multiply(20);
-            Location dest = player.getLocation().add(randomDistance);
-            e.getPathfinder().moveTo(dest, 1.5);
+            e.getPathfinder().moveTo(dest, 1.3);
         });
     }
 }

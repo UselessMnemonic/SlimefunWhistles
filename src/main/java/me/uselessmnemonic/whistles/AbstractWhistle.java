@@ -23,10 +23,15 @@ import java.util.UUID;
 
 public abstract class AbstractWhistle extends SlimefunItem implements DamageableItem {
 
+    private static Category categoryInstance;
+
     public static Category getWhistleCategory() {
-        NamespacedKey customId = new NamespacedKey(Whistles.getInstance(), "category_whistles");
-        CustomItem customItem = new CustomItem(Material.BAMBOO, ChatColor.WHITE + "Magic Whistles");
-        return new Category(customId, customItem);
+        if (categoryInstance == null) {
+            NamespacedKey customId = new NamespacedKey(Whistles.getInstance(), "category_whistles");
+            CustomItem customItem = new CustomItem(Material.BAMBOO, ChatColor.WHITE + "Magic Whistles");
+            categoryInstance = new Category(customId, customItem);
+        }
+        return categoryInstance;
     }
 
     public AbstractWhistle(SlimefunItemStack item, ItemStack[] recipe) {
@@ -60,12 +65,12 @@ public abstract class AbstractWhistle extends SlimefunItem implements Damageable
 
     public void preWhistleBlow(PlayerRightClickEvent event) {
         event.cancel();
-        MelodyRunnable melodyRunnable = new MelodyRunnable(getMelody());
+        MelodyRunnable melodyRunnable = new MelodyRunnable(getMelody(event.getItem()));
         melodyRunnable.play(event.getPlayer());
         onWhistleBlow(event);
     }
 
-    public abstract Melody getMelody();
+    public abstract Melody getMelody(ItemStack stack);
 
     public abstract void onWhistleBlow(PlayerRightClickEvent event);
 }
